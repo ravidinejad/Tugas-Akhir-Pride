@@ -53,16 +53,9 @@ const Navbar = () => {
               Kids
             </Link>
           </li>
-          <li>
-            <Link to="/login" className="text-white hover:text-gray-300 block">
-              Login
-            </Link>
-          </li>
-          <li>
-            <Link to="/signup" className="text-white hover:text-gray-300 block">
-              Sign up
-            </Link>
-          </li>
+        
+    
+          
         </ul>
         <div className="hidden lg:flex items-center space-x-4">
           <input

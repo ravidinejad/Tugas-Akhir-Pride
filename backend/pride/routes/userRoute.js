@@ -11,5 +11,6 @@ router.get('/:id', auth.verifyToken, userController.getUser);
 router.patch('/:id', auth.verifyToken, auth.isAdmin, userController.updateUser);
 router.delete('/:id', auth.verifyToken, auth.isAdmin, userController.deleteUser);
 router.post('/login', userController.login);
+router.post('/register', validate.register, userController.registerUser); // Menggunakan validate.register
 
 module.exports = router;

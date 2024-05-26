@@ -1,12 +1,41 @@
 const { User } = require('../models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const validate = require('../middlewares/validate');
 
 module.exports = {
+  async registerUser(req, res) {
+    const { username, password, name } = req.body;
+    try {
+      const existingUser = await User.findOne({ where: { username } });
+      if (existingUser) {
+        return res.status(400).json({ 
+          code: 400,
+          message: 'Username already exists' 
+        });
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const user = await User.create({ username, password: hashedPassword, role: 'user', name });
+      res.status(201).json(user);
+    } catch (error) {
+      res.status(400).json({ 
+        code: 400,
+        message: error.message 
+      });
+    }
+  },
+
   async createUser(req, res) {
     const { username, password, role, name } = req.body;
     try {
+      const existingUser = await User.findOne({ where: { username } });
+      if (existingUser) {
+        return res.status(400).json({ 
+          code: 400,
+          message: 'Username already exists' 
+        });
+      }
+
       const hashedPassword = await bcrypt.hash(password, 10);
       const user = await User.create({ username, password: hashedPassword, role, name });
       res.status(201).json(user);

@@ -6,10 +6,12 @@ const Register = () => {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
-    role: '', // Default role is user
     name: ''
   });
   const [message, setMessage] = useState('');
+  
+  // Tambahkan state untuk role
+  const [role, setRole] = useState('user');
 
   const handleChange = (e) => {
     setFormData({
@@ -17,21 +19,33 @@ const Register = () => {
       [e.target.name]: e.target.value
     });
   };
+  
+  // Handle perubahan pada input role
+  const handleRoleChange = (e) => {
+    setRole(e.target.value);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:2910/users/register', formData) // Ganti dengan endpoint API yang sesuai
+    const formDataWithRole = {
+      ...formData,
+      role: role
+    };
+    axios.post('http://localhost:2910/users/register', formDataWithRole)
       .then(response => {
         setMessage('User registered successfully!');
         setFormData({
           username: '',
           password: '',
-          role: 'user',
           name: ''
         });
       })
       .catch(error => {
-        setMessage('Error registering user: ' + error.response.data.error);
+        if (error.response.status === 400) {
+          setMessage('Error registering user: Data already exists.'); // Set custom error message
+        } else {
+          setMessage('Error registering user: ' + error.response.data.error);
+        }
       });
   };
 
@@ -73,24 +87,14 @@ const Register = () => {
               required
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Role</label>
-            <select
-              name="role"
-              className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={formData.role}
-              onChange={handleChange}
-              required
-            >
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-            </select>
-          </div>
+          {/* Input tersembunyi untuk role */}
+          <input type="hidden" name="role" value={role} />
+
           <button
             type="submit"
             className="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            Sign Up
+            Register
           </button>
           {message && <p className="text-center text-red-500">{message}</p>}
           <div className="text-center mt-2">

@@ -38,7 +38,7 @@ const landingpage = () => {
             <br />designers
           </p>
           <div className="mt-5 flex items-center">
-            <Link to="/login">
+            <Link to="/LoginUser">
               <button className="mr-4 px-6 py-3 font-bold bg-black text-white rounded-full">Start Shopping</button>
             </Link>
           </div>

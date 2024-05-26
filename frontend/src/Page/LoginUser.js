@@ -9,32 +9,34 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    setError(""); // Clear previous error messages
     try {
-      // Lakukan permintaan login dengan axios
       const response = await axios.post("http://localhost:2910/users/login", {
         username,
         password,
       });
 
-      console.log("Login response:", response); // Tambahkan log untuk melihat respons
-
-      // Jika berhasil, simpan token dari respons
       const { token } = response.data;
 
-      // Simpan token ke sessionStorage untuk otentikasi di permintaan selanjutnya
-      sessionStorage.setItem("token", token);
-
-      console.log("Token saved:", token); // Log token yang disimpan
-
-      // Set header Authorization dengan bearer token untuk semua permintaan selanjutnya
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
-      // Redirect pengguna ke halaman setelah login (misalnya, dashboard)
-      navigate("/beranda");
+      if (token) {
+        sessionStorage.setItem("token", token);
+        navigate("/beranda");
+      } else {
+        setError("Access denied. You don't have permission to access this page.");
+      }
     } catch (error) {
-      // Tangkap kesalahan dan tampilkan pesan kesalahan
-      console.error("Login error:", error); // Log error untuk debugging
-      setError("Login failed. Please check your credentials.");
+      console.error("Login error:", error);
+
+      if (error.response) {
+        // Server responded with a status other than 200 range
+        setError(`Login failed: ${error.response.data.message || error.response.statusText}`);
+      } else if (error.request) {
+        // Request was made but no response was received
+        setError("Login failed: No response from server. Please try again later.");
+      } else {
+        // Something else happened while setting up the request
+        setError(`Login failed: ${error.message}`);
+      }
     }
   };
 
@@ -73,7 +75,7 @@ const Login = () => {
             <div className="text-center mt-4">
               Apakah kamu tidak memiliki akun?{" "}
               <Link
-                to="/forgot-password"
+                to="/RegisterUser"
                 className="text-sm font-medium text-blue-500"
               >
                 Daftar
