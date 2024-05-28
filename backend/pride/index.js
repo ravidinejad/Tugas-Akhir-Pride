@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/users', userRoutes);
-app.use('/products', productRoutes);
+app.use('/products', productRoutes, express.static('uploads'));
 app.use('/cart', cartRoutes);
 app.use('/order', orderRoutes);
 app.use('/checkout', checkoutRoutes);

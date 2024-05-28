@@ -1,7 +1,7 @@
 import React from 'react'
 import Navigasi from '../Components/Navberanda'
 import Carousel from '../Components/Carousel'
-import Cardlayout from '../Layout/cardlayout'
+import Card from '../Layout/cardlayout'
 
 const Beranda = () => {
   return (
@@ -9,7 +9,7 @@ const Beranda = () => {
     <div>
         <Navigasi />
         <Carousel />
-        <Cardlayout />
+        <Card />
     </div>
   )
 }

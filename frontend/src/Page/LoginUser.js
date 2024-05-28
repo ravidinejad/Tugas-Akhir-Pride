@@ -19,8 +19,9 @@ const Login = () => {
       const { token } = response.data;
 
       if (token) {
-        sessionStorage.setItem("token", token);
-        navigate("/beranda");
+        localStorage.setItem("token", token);
+
+        navigate("/Beranda");
       } else {
         setError("Access denied. You don't have permission to access this page.");
       }
